@@ -6,6 +6,7 @@ import com.laioffer.twitch.db.entity.FavoriteRecordEntity;
 import com.laioffer.twitch.db.entity.ItemEntity;
 import com.laioffer.twitch.db.entity.UserEntity;
 import com.laioffer.twitch.model.TypeGroupedItemList;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,7 @@ public class FavoriteService {
 
 
     @Transactional
+    @CacheEvict(cacheNames = "recommend_items", key = "#user")
     public void setFavoriteItem(UserEntity user, ItemEntity item) {
         ItemEntity persistedItem = itemRepository.findByTwitchId(item.twitchId());
         if (persistedItem == null) {
@@ -42,7 +44,7 @@ public class FavoriteService {
         favoriteRecordRepository.save(favoriteRecord);
     }
 
-
+    @CacheEvict(cacheNames = "recommend_items", key = "#user")
     public void unsetFavoriteItem(UserEntity user, String twitchId) {
         ItemEntity item = itemRepository.findByTwitchId(twitchId);
         if (item != null) {

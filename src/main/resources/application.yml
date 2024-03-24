@@ -25,6 +25,9 @@ spring:
         provider:
           twitch:
             token-uri: https://id.twitch.tv/oauth2/token
+  cache:
+    caffeine:
+      spec: expireAfterWrite=1m
 
 
   datasource:
